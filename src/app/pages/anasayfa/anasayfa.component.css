@@ -1,0 +1,46 @@
+.hero {
+  background-color: #333;
+  color: #fff;
+  padding: 100px 0;
+  text-align: center;
+}
+
+.intro-video {
+  padding: 80px 0;
+  text-align: center;
+}
+
+.features {
+  padding: 80px 0;
+  text-align: center;
+  background-color: #f7f7f7;
+}
+
+.features i {
+  color: #007BFF;
+}
+
+.contact {
+  padding: 80px 0;
+  text-align: center;
+  background-color: #e9ecef;
+}
+
+.contact form {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.btn {
+  padding: 10px 20px;
+  border: none;
+  background-color: #007BFF;
+  color: #fff;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+.btn:hover {
+  background-color: #0056b3;
+}
