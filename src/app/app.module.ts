@@ -10,8 +10,9 @@ import { LoginComponent } from './pages/login/login.component';
 import { HakkimizdaComponent } from './pages/hakkimizda/hakkimizda.component';
 import {HttpClientModule} from "@angular/common/http";
 import {FormsModule} from "@angular/forms";
-import { RouterModule } from '@angular/router';
-import {CommonModule} from "@angular/common";
+import { RegisterComponent } from './pages/register/register.component';
+import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -19,14 +20,14 @@ import {CommonModule} from "@angular/common";
     FooterComponent,
     AnasayfaComponent,
     LoginComponent,
-    HakkimizdaComponent
+    HakkimizdaComponent,
+    RegisterComponent,
+    ForgotPasswordComponent
   ],
   imports: [
-    CommonModule,
     BrowserModule,
     HttpClientModule,
     FormsModule,
-    RouterModule.forRoot([]),
     AppRoutingModule
   ],
   providers: [],

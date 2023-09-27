@@ -14,6 +14,9 @@ export class LoginComponent {
   showError: boolean = false; // Hata mesajını göstermek için bir değişken
   errorMessage: string = '';  // Hata mesajının içeriği için bir değişken
 
+  showSuccess: boolean = false;
+  successMessage: string = '';
+
   constructor(private http: HttpClient, private router: Router) { }
 
   onLogin() {
@@ -24,9 +27,14 @@ export class LoginComponent {
 
     this.http.post('http://localhost:8080/api/users/login', loginData).subscribe(
       (response: any) => {
-        if (response.status === 'Basarili') {
+        if (response.token) { // Eğer token yanıtta dönerse
+          localStorage.setItem('token', response.token); // Token'ı yerel depolamada sakla
           console.log("Giriş başarılı!");
-          this.router.navigate(['/hakkimizda']); // "hakkimizda" yoluna yönlendirir
+          this.showSuccess = true;
+          this.successMessage = "Basarili bir sekilde giris yaptınız! Yönlendiriliyorsunuz..."
+          setTimeout(() => {
+            this.router.navigate(['/hakkimizda']); // "hakkimizda" yoluna yönlendirir
+          }, 2000);
         } else {
           this.showError = true; // Hata olduğunda hata mesajını göster
           this.errorMessage = "Kullanıcı Adınız veya Şifreniz hatalı!";
