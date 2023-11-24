@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
 import { Router } from '@angular/router';
+import { WebcamImage } from 'ngx-webcam';
+import { Subject, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -11,11 +13,18 @@ export class LoginComponent {
 
   username: string = '';
   password: string = '';
-  showError: boolean = false; // Hata mesajını göstermek için bir değişken
-  errorMessage: string = '';  // Hata mesajının içeriği için bir değişken
-
+  showError: boolean = false;
+  errorMessage: string = '';
   showSuccess: boolean = false;
   successMessage: string = '';
+  showFacePopup: boolean = false;
+
+  webcamWidth = 300;
+  webcamHeight = 300;
+  webcamImageType = 'image/jpeg';
+  webcamImage: WebcamImage | null = null;
+  capturedImage: string | null = null; // Çekilen fotoğrafın önizlemesi için değişken
+  webcamTrigger: Subject<void> = new Subject<void>();
 
   constructor(private http: HttpClient, private router: Router) { }
 
@@ -25,27 +34,75 @@ export class LoginComponent {
       password: this.password
     };
 
-    this.http.post('http://localhost:8080/api/users/login', loginData).subscribe(
+    this.http.post('https://backend.yedekle.net/api/users/login', loginData).subscribe(
       (response: any) => {
-        if (response.token) { // Eğer token yanıtta dönerse
-          localStorage.setItem('token', response.token); // Token'ı yerel depolamada sakla
+        if (response.token) {
+          localStorage.setItem('token', response.token);
           console.log("Giriş başarılı!");
-          this.showSuccess = true;
-          this.successMessage = "Basarili bir sekilde giris yaptınız! Yönlendiriliyorsunuz..."
-          setTimeout(() => {
-            this.router.navigate(['/hakkimizda']); // "hakkimizda" yoluna yönlendirir
-          }, 2000);
+          this.openFacePopup();
         } else {
-          this.showError = true; // Hata olduğunda hata mesajını göster
+          this.showError = true;
           this.errorMessage = "Kullanıcı Adınız veya Şifreniz hatalı!";
           console.error("Giriş başarısız.");
         }
       },
       error => {
-        this.showError = true; // HTTP hatası olduğunda hata mesajını göster
+        this.showError = true;
         this.errorMessage = "Bir hata oluştu!";
         console.error("Bir hata oluştu:", error.message);
       }
     );
   }
+
+  openFacePopup(): void {
+    this.showFacePopup = true;
+    this.webcamTrigger.next();
+  }
+
+  get webcamTriggerObservable(): Observable<void> {
+    return this.webcamTrigger.asObservable();
+  }
+
+  handleImage(webcamImage: WebcamImage): void {
+    this.webcamImage = webcamImage;
+    this.capturedImage = webcamImage.imageAsDataUrl; // Çekilen fotoğrafı sakla
+  }
+
+  triggerSnapshot(): void {
+    this.webcamTrigger.next();
+  }
+
+  confirmFace(): void {
+    if (!this.webcamImage) {
+      console.error("Fotoğraf çekilmedi!");
+      return;
+    }
+
+    // Fotoğrafı binary formatına dönüştürmek için Blob'a çevir
+    fetch(this.webcamImage.imageAsDataUrl)
+      .then(res => res.blob())
+      .then(blob => {
+        const formData = new FormData();
+        formData.append('image', blob, 'face.jpg');
+
+        // Backend'e POST isteği gönder
+        this.http.post('https://backend.yedekle.net/api/face-verification', formData).subscribe(
+          response => {
+            console.log("Yüz doğrulama başarılı", response);
+            this.showSuccess = true;
+            this.successMessage = "Başarılı bir şekilde giriş yaptınız! Yönlendiriliyorsunuz...";
+            setTimeout(() => {
+              this.router.navigate(['/hakkimizda']);
+            }, 2000);
+          },
+          error => {
+            console.error("Yüz doğrulama başarısız", error);
+            // Hata durumunda yapılacak işlemleri buraya ekleyebilirsiniz
+          }
+        );
+      });
+
+    this.showFacePopup = false;
+  }
 }
+

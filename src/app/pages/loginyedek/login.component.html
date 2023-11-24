@@ -13,14 +13,17 @@
     <div class="col-md-4 my-auto">
       <h2>Giriş Yap</h2>
 
+
       <!-- Hata mesajını gösteren alan -->
       <div *ngIf="showError" class="alert alert-danger">
-        {{ errorMessage }}
+        {{ "Kullanici adı veya şifre yanlış" }}
       </div>
 
       <div *ngIf="successMessage" class="alert alert-success">
         {{ successMessage }}
       </div>
+
+
 
       <form (ngSubmit)="onLogin()">
         <div class="form-group position-relative">
@@ -36,34 +39,16 @@
         <p class="mt-3">Hesabınız yok mu? <a [routerLink]="['/register']">Kayıt Ol</a></p>
       </form>
     </div>
-    
-    <!-- Yüz Tanıma Popup -->
-    <div *ngIf="showFacePopup" class="face-popup">
-      <h2>Yüzünüzü Tanıyalım</h2>
-      <div class="face-container">
-        <!-- Eğer çekilen fotoğraf varsa, onu göster -->
-        <img *ngIf="capturedImage" [src]="capturedImage" class="captured-image" />
 
-        <!-- Eğer çekilen fotoğraf yoksa, kamerayı göster -->
-        <webcam *ngIf="!capturedImage" [width]="webcamWidth"
-                [height]="webcamHeight"
-                [imageType]="webcamImageType"
-                [trigger]="webcamTriggerObservable"
-                (imageCapture)="handleImage($event)">
-        </webcam>
-      </div>
-      <button (click)="triggerSnapshot()">Fotoğraf Çek</button>
-      <button (click)="confirmFace()">Onayla</button>
-    </div>
-    
     <!-- Sağ Taraftaki Resim -->
     <div class="col-md-8 p-2">
       <img src="assets/test.jpg" alt="API Lifecycle Management" class="img-fluid h-100 w-100">
     </div>
   </div>
+
 </div>
+
 
 <!-- JavaScript ve diğer bağlantıları ekleyebilirsiniz -->
 </body>
 </html>
-

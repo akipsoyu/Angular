@@ -13,6 +13,9 @@ import {FormsModule} from "@angular/forms";
 import { RegisterComponent } from './pages/register/register.component';
 import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password.component';
 
+// WebcamModule'ü doğru yerden import edin
+import { WebcamModule } from 'ngx-webcam';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -28,9 +31,11 @@ import { ForgotPasswordComponent } from './pages/forgot-password/forgot-password
     BrowserModule,
     HttpClientModule,
     FormsModule,
-    AppRoutingModule
+    AppRoutingModule,
+    WebcamModule  // Bu zaten mevcutmuş
   ],
   providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
+

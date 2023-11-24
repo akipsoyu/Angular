@@ -33,7 +33,7 @@ export class RegisterComponent implements OnInit {
       password: this.password
     };
 
-    this.http.post<any>('http://localhost:8080/api/users', userData).subscribe(response => {
+    this.http.post<any>('http://158.178.204.211:8080/api/users', userData).subscribe(response => {
       if (response.status === 'Basarili') {
         this.successMessage = 'Başarılı ile kayıt oldunuz!';
         this.showError = false;
